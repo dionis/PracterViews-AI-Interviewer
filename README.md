@@ -42,9 +42,10 @@ graph TD
         subgraph AI_Cluster [✨ GENERATIVE ENGINES]
             Gemini[🧠 Gemini 2.0 Flash\nReasoning Core]
             
-            subgraph Avatar_System [🎭 DYNAMIC AVATAR PIPELINE]
+            subgraph Avatar_System [🎭 TRIPLE AVATAR CASCADE]
                 Tavus[🗣️ TAVUS\nHigh-Fidelity Avatar]
-                Bey[👻 BEYOND PRESENCE\nInstant Fallback Avatar]
+                Bey[👻 BEYOND PRESENCE\nCloud Fallback]
+                ARTalk[🎨 ARTALK\nSelf-hosted GPU Avatar]
             end
         end
     end
@@ -59,8 +60,9 @@ graph TD
     Agent ==>|Render Stream| Tavus
     
     %% Fallback Logic
-    Tavus -.->|❌ CRITICAL FAILURE| Bey
-    Bey -.->|✅ AUTO-RECOVERY| Room
+    Tavus -.->|❌ FAILURE| Bey
+    Bey -.->|❌ FAILURE| ARTalk
+    ARTalk -.->|✅ AUTO-RECOVERY| Room
     
     %% Extra Visual Data Flow
     Room -.->|Audio Data| Visualizer
@@ -77,11 +79,14 @@ graph TD
 
 This pipeline is engineered to **never die** — no downtime, no silent failures, no awkward avatar freeze.
 
-### Primary Core — Tavus  
+### Level 1 — Tavus (Primary)  
 High-fidelity cinematic avatar generation for hyper-realistic interviews.
 
-### Automatic Failover — Beyond Presence  
+### Level 2 — Beyond Presence (Fallback 1)  
 If Tavus hits rate limits, outages, or API errors, we instantly **hot-swap** to Beyond Presence.
+
+### Level 3 — ARTalk (Fallback 2 — Self-hosted)  
+If both cloud providers fail, we fall back to a **self-hosted GPU avatar** powered by ARTalk (3D Gaussian Splatting + Ditto model). Runs on your own GPU server — no external API credits needed.
 
 ### Dynamic Voice Shift  
 When fallback triggers:
@@ -116,7 +121,7 @@ Built using **React 18 + Vite**, animated with **Framer Motion**, and styled usi
 | Frontend | React + Vite | High-performance UI |
 | Styling | Tailwind CSS | Utility-first design |
 | Motion | Framer Motion | Cinematic transitions |
-| Avatars | Tavus + Beyond Presence | Primary + fallback visual synthesis |
+| Avatars | Tavus + Beyond Presence + ARTalk | Primary + cloud fallback + self-hosted GPU fallback |
 
 ---
 
@@ -169,6 +174,10 @@ TAVUS_API_KEY=************************
 # Beyond Presence Fallback
 BEY_API_KEY=************************
 BEY_AVATAR_ID=avatar_**************
+
+# ARTalk (Self-hosted GPU Avatar — Fallback 2)
+ARTALK_SERVER_URL=http://your-gpu-server:8000
+ARTALK_REPLICA_ID=mesh
 ```
 
 ---

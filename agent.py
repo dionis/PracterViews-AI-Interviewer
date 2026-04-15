@@ -8,6 +8,7 @@ from livekit.plugins import (
 )
 from prompts import INTERVIEW_PROMPTS
 from livekit.plugins import tavus, bey
+from livekit.plugins import artalk
 import os
 import json
 import asyncio
@@ -84,46 +85,70 @@ async def my_agent(ctx: agents.JobContext):
     assistant = Assistant(interview_type=interview_type)
 
    
-    avatar = tavus.AvatarSession(
-        replica_id=os.environ.get("REPLICA_ID"),
-        persona_id=os.environ.get("PERSONA_ID"),
-        api_key=os.environ.get("TAVUS_API_KEY"),
-    )
-    
-    # Fallback Beyond Presence avatar
-    try:
-        print("[AGENT] Attempting to start Tavus avatar...")
-        await avatar.start(session, room=ctx.room)
-        print("[AGENT] Tavus avatar started successfully.")
-    except Exception as e:
-        error_msg = str(e).lower()
-        print(f"[AGENT] Tavus failed to start: {e}")
-        
-        
-        fallback_triggers = [
-            "credits", "limit", "fallback triggered", "quota", 
-            "provider unavailable", "payment required", "avatar error"
-        ]
-        
-       
-        if any(trigger in error_msg for trigger in fallback_triggers) or True:
-            print("[AGENT] Triggering fallback to Beyond Presence...")
+    # ── Avatar Cascade: Tavus → Beyond Presence → ARTalk ──────────────
+    avatar_started = False
+
+    # ── LEVEL 1: Tavus (Primary — Cloud API) ─────────────────────────
+    tavus_api_key = os.environ.get("TAVUS_API_KEY", "").strip()
+    if tavus_api_key and tavus_api_key != "your_tavus_api_key":
+        try:
+            print("[AGENT] Attempting to start Tavus avatar...")
+            avatar = tavus.AvatarSession(
+                replica_id=os.environ.get("REPLICA_ID"),
+                persona_id=os.environ.get("PERSONA_ID"),
+                api_key=tavus_api_key,
+            )
+            await avatar.start(session, room=ctx.room)
+            print("[AGENT] ✅ Tavus avatar started successfully.")
+            avatar_started = True
+        except Exception as e:
+            print(f"[AGENT] ❌ Tavus failed to start: {e}")
+    else:
+        print("[AGENT] ⏭️ Tavus credentials not configured, skipping.")
+
+    # ── LEVEL 2: Beyond Presence (Fallback 1 — Cloud API) ────────────
+    if not avatar_started:
+        bey_api_key = os.environ.get("BEY_API_KEY", "").strip()
+        if bey_api_key:
             try:
-                
-                print("[AGENT] Switching Gemini voice to Male (Puck)...")
+                print("[AGENT] Attempting Beyond Presence fallback...")
                 gemini_model.voice = "Puck"
-                
-               
                 bey_avatar = bey.AvatarSession(
-                    api_key=os.environ.get("BEY_API_KEY"),
-                    avatar_id=os.environ.get("BEY_AVATAR_ID"), 
+                    api_key=bey_api_key,
+                    avatar_id=os.environ.get("BEY_AVATAR_ID"),
                 )
                 await bey_avatar.start(session, room=ctx.room)
-                print("[AGENT] Beyond Presence avatar started successfully (Fallback).")
-            except Exception as fallback_error:
-                print(f"[AGENT] Fallback to Beyond Presence also failed: {fallback_error}")
+                print("[AGENT] ✅ Beyond Presence avatar started (Fallback 1).")
+                avatar_started = True
+            except Exception as bey_error:
+                print(f"[AGENT] ❌ Beyond Presence failed: {bey_error}")
         else:
-            print("[AGENT] Tavus error did not trigger fallback criteria.")
+            print("[AGENT] ⏭️ Beyond Presence credentials not configured, skipping.")
+
+    # ── LEVEL 3: ARTalk (Fallback 2 — Self-hosted GPU) ───────────────
+    if not avatar_started:
+        artalk_server_url = os.environ.get("ARTALK_SERVER_URL", "").strip()
+        if artalk_server_url:
+            try:
+                print("[AGENT] Attempting ARTalk fallback...")
+                artalk_replica_id = os.environ.get("ARTALK_REPLICA_ID", "mesh")
+                artalk_avatar = artalk.AvatarSession(
+                    replica_id=artalk_replica_id,
+                    api_url=artalk_server_url,
+                )
+                await artalk_avatar.start(
+                    agent_session=session,
+                    room=ctx.room,
+                )
+                print("[AGENT] ✅ ARTalk avatar started (Fallback 2).")
+                avatar_started = True
+            except Exception as artalk_error:
+                print(f"[AGENT] ❌ ARTalk also failed: {artalk_error}")
+        else:
+            print("[AGENT] ⏭️ ARTalk server URL not configured, skipping.")
+
+    if not avatar_started:
+        print("[AGENT] ⚠️ No avatar provider available. Agent will run in AUDIO-ONLY mode.")
 
     print(f"[AGENT] Starting session with interview type: {interview_type}")
     
