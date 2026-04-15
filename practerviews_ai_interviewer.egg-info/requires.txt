@@ -1,0 +1,14 @@
+livekit-agents[tavus]~=1.0
+livekit-plugins-openai
+livekit-plugins-google
+livekit-plugins-noise-cancellation
+livekit-plugins-bey
+livekit-plugins-artalk @ git+https://github.com/dionis/develop_livekit_and_external_ai_module.git
+google-generativeai
+python-dotenv
+requests
+pydantic-ai-slim[mcp,openai]
+
+[dev]
+pytest>=7.0
+pytest-asyncio>=0.21

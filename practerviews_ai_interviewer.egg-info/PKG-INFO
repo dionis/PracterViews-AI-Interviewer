@@ -1,3 +1,24 @@
+Metadata-Version: 2.4
+Name: practerviews-ai-interviewer
+Version: 1.0.0
+Summary: AI-powered hyper-realistic interview simulation platform with triple avatar cascade
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: livekit-agents[tavus]~=1.0
+Requires-Dist: livekit-plugins-openai
+Requires-Dist: livekit-plugins-google
+Requires-Dist: livekit-plugins-noise-cancellation
+Requires-Dist: livekit-plugins-bey
+Requires-Dist: livekit-plugins-artalk @ git+https://github.com/dionis/develop_livekit_and_external_ai_module.git
+Requires-Dist: google-generativeai
+Requires-Dist: python-dotenv
+Requires-Dist: requests
+Requires-Dist: pydantic-ai-slim[mcp,openai]
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.21; extra == "dev"
+
 # 🚀 PracterViews: The Future of AI Interviewing  
 
 ![PracterViews Banner](https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge&color=00ff00) ![AI](https://img.shields.io/badge/AI-Gemini%202.0-blue?style=for-the-badge&logo=google&logoColor=white) ![Realtime](https://img.shields.io/badge/Latency-Ultra%20Low-red?style=for-the-badge) ![Experience](https://img.shields.io/badge/UX-Premium-purple?style=for-the-badge)
@@ -129,22 +150,27 @@ Built using **React 18 + Vite**, animated with **Framer Motion**, and styled usi
 
 ## Phase 1 — Installation
 
-> **Requires:** [uv](https://docs.astral.sh/uv/) — fast Python package manager.
-
-### Backend Setup (uv)
-```bash
-# Install uv (if not installed)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Install all Python dependencies (creates .venv automatically)
-uv sync
-```
-
 ### Frontend Setup
 ```bash
 cd frontend
 npm install
+# Return to project root
 cd ..
+```
+
+### Backend Setup
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate (Windows)
+.\venv\Scripts\Activate
+
+# Activate (Mac/Linux)
+# source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
 ---
@@ -177,19 +203,19 @@ ARTALK_REPLICA_ID=mesh
 
 ---
 
-## Phase 3 — System Ignition
+## Phase 2 — System Ignition
 
 ### 1️⃣ Token Server (Gatekeeper)
 
 ```bash
-uv run python token_server.py
+python token_server.py
 # ONLINE @ Port 3000
 ```
 
 ### 2️⃣ AI Agent (Brain)
 
 ```bash
-uv run python agent.py dev
+python agent.py dev
 # LISTENING for real-time streams
 ```
 

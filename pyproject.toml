@@ -1,0 +1,35 @@
+[project]
+name = "practerviews-ai-interviewer"
+version = "1.0.0"
+description = "AI-powered hyper-realistic interview simulation platform with triple avatar cascade"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+dependencies = [
+    # LiveKit Core
+    "livekit-agents[tavus]~=1.0",
+    "livekit-plugins-openai",
+    "livekit-plugins-google",
+    "livekit-plugins-noise-cancellation",
+    "livekit-plugins-bey",
+
+    # ARTalk Avatar (Self-hosted GPU Fallback)
+    "livekit-plugins-artalk @ git+https://github.com/dionis/develop_livekit_and_external_ai_module.git",
+
+    # AI & Utilities
+    "google-generativeai",
+    "python-dotenv",
+    "requests",
+    "pydantic-ai-slim[openai,mcp]",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+]
+
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
