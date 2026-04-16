@@ -86,6 +86,7 @@ async def my_agent(ctx: agents.JobContext):
                     "phase": current_phase
                 })
 
+    await ctx.connect()
     
     room_name = ctx.room.name
     print(f"[AGENT] Connected to room: {room_name}")
