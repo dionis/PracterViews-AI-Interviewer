@@ -5,6 +5,6 @@ livekit-plugins-noise-cancellation
 requests
 python-dotenv
 pydantic-ai-slim[openai,mcp]
-livekit-agents[tavus]~=1.0
+livekit-agents[tavus]>=1.5.0
 livekit-plugins-bey
 livekit-plugins-artalk @ git+https://github.com/dionis/develop_livekit_and_external_ai_module.git
