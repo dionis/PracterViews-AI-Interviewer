@@ -158,6 +158,19 @@ async def my_agent(ctx: agents.JobContext):
             try:
                 print("[AGENT] Attempting ARTalk fallback...")
                 artalk_replica_id = os.environ.get("ARTALK_REPLICA_ID", "mesh")
+                
+                # Custom background and chromakey threshold:
+                bg_threshold_str = os.environ.get("AVATAR_BG_THRESHOLD")
+                bg_threshold = None
+                if bg_threshold_str is not None:
+                    try:
+                        bg_threshold = int(bg_threshold_str)
+                    except ValueError:
+                        print(f"[AGENT] Advertencia: AVATAR_BG_THRESHOLD '{bg_threshold_str}' no es un entero válido.")
+
+                bg_scene_str = os.environ.get("AVATAR_BACKGROUND_SCENE", "").strip()
+                bg_scene = bg_scene_str if bg_scene_str else None
+
                 artalk_avatar = artalk.AvatarSession(
                     replica_id=artalk_replica_id,
                     api_url=artalk_server_url,
@@ -165,6 +178,8 @@ async def my_agent(ctx: agents.JobContext):
                 await artalk_avatar.start(
                     agent_session=session,
                     room=ctx.room,
+                    background_scene=bg_scene,
+                    bg_threshold=bg_threshold,
                 )
                 print("[AGENT] ✅ ARTalk avatar started (Fallback 2).")
                 avatar_started = True
