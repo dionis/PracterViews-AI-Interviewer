@@ -46,7 +46,8 @@ const InterviewRoom = () => {
 
         const fetchToken = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/getToken?type=${type || 'default'}`);
+                const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+                const response = await fetch(`${baseUrl}/getToken?type=${type || 'default'}`);
                 const data = await response.json();
                 setTokenReady(data.token);
                 setServerUrl(data.url);  // Get URL from token server
