@@ -16,8 +16,7 @@ import inspect
 
 # ── Monkey-patch: bridge version mismatch between livekit-agents and livekit-plugins-google ──
 # livekit-plugins-google may pass `per_response_tool_choice` to RealtimeCapabilities,
-# but older livekit-agents versions don't accept it yet. This patch makes the
-# constructor silently accept (and ignore) any unknown keyword arguments.
+# but older livekit-agents versions don't accept it yet.
 from livekit.agents import llm as _llm
 _original_rc_init = _llm.RealtimeCapabilities.__init__
 _rc_sig = inspect.signature(_original_rc_init)
@@ -26,6 +25,17 @@ if "per_response_tool_choice" not in _rc_sig.parameters:
         kwargs.pop("per_response_tool_choice", None)
         return _original_rc_init(self, *args, **kwargs)
     _llm.RealtimeCapabilities.__init__ = _patched_rc_init
+
+# Also patch the missing `_report_connection_acquired` on RealtimeSession which
+# is present in new livekit-plugins-google but missing in older livekit-agents.
+try:
+    from livekit.plugins.google.realtime.realtime_api import RealtimeSession
+    if not hasattr(RealtimeSession, "_report_connection_acquired"):
+        def _dummy_report_connection_acquired(self, delayed_time):
+            pass
+        RealtimeSession._report_connection_acquired = _dummy_report_connection_acquired
+except ImportError:
+    pass
 # ── End monkey-patch ──────────────────────────────────────────────────────────
 
 load_dotenv(".env")
