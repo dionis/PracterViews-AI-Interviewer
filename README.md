@@ -8,6 +8,8 @@
 PracterViews is not just an AI interviewer — it's a **hyper-realistic simulation engine**.  
 Powered by multimodal LLMs, cinematic avatars, and real-time audio/video orchestration, it recreates the feeling of interviewing with a real human in milliseconds.
 
+The main objective is create a digital avatar school trainer for help students learn knowledges and prepare for exams.
+
 ---
 
 # 🌌 Architecture of Intelligence
