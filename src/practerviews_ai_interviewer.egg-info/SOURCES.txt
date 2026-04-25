@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+src/app-school-info/app.py
+src/practerviews_ai_interviewer.egg-info/PKG-INFO
+src/practerviews_ai_interviewer.egg-info/SOURCES.txt
+src/practerviews_ai_interviewer.egg-info/dependency_links.txt
+src/practerviews_ai_interviewer.egg-info/requires.txt
+src/practerviews_ai_interviewer.egg-info/top_level.txt

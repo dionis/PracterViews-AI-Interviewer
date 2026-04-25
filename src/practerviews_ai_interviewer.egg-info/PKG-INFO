@@ -1,3 +1,24 @@
+Metadata-Version: 2.4
+Name: practerviews-ai-interviewer
+Version: 1.0.0
+Summary: AI-powered hyper-realistic interview simulation platform with triple avatar cascade
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: livekit-agents[tavus]~=1.0
+Requires-Dist: livekit-plugins-openai
+Requires-Dist: livekit-plugins-google
+Requires-Dist: livekit-plugins-noise-cancellation
+Requires-Dist: livekit-plugins-bey
+Requires-Dist: livekit-plugins-artalk @ git+https://github.com/dionis/develop_livekit_and_external_ai_module.git
+Requires-Dist: google-generativeai
+Requires-Dist: python-dotenv
+Requires-Dist: requests
+Requires-Dist: pydantic-ai-slim[mcp,openai]
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.21; extra == "dev"
+
 # 🚀 PracterViews: The Future of AI Interviewing  
 
 ![PracterViews Banner](https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge&color=00ff00) ![AI](https://img.shields.io/badge/AI-Gemini%202.0-blue?style=for-the-badge&logo=google&logoColor=white) ![Realtime](https://img.shields.io/badge/Latency-Ultra%20Low-red?style=for-the-badge) ![Experience](https://img.shields.io/badge/UX-Premium-purple?style=for-the-badge)
@@ -202,46 +223,6 @@ cd frontend
 npm run dev
 # Running @ http://localhost:5173
 ```
-
----
-
-# 🎓 School Info (Avatar & File Manager App)
-
-This project includes an auxiliary Gradio-based web application designed as an **Avatar Creation Tool** and **File Management System**. It is located in the `src/app-school-info` directory.
-
-## Features & Functionalities
-
-### 📸 Avatar Creation (Left Column)
-- **Webcam & Image Upload:** Capture a photo directly using your device's webcam or upload an existing image.
-- **Robust Face Detection:** Integrates Google's **MediaPipe (Tasks API)** and OpenCV to ensure the image contains a clear, frontal human face. 
-- **Automatic Model Download:** The required MediaPipe model (`blaze_face_short_range.tflite`) is downloaded automatically on first run.
-- **Image Gallery:** Easily reuse previously processed avatars via a dropdown selector.
-
-### 📂 File Management (Right Column)
-- **Live File Dashboard:** View all files stored in the local `data/` directory through an interactive table displaying File Name, Type, and Last Modified Date.
-- **Search & Filter:** Quickly find files by typing their names into the search bar.
-- **Upload New Files:** Support for uploading multiple files at once. Allowed extensions: `.pdf`, `.png`, `.jpg`, `.jpeg`, `.csv`, `.md`, and `.markdown`.
-- **Update Existing Files:** Select a specific file from the dropdown and upload a new version to seamlessly replace it.
-- **Delete Files:** Remove unwanted files from the local storage directly through the interface.
-
-## 🚀 How to Initialize and Run the School Info App
-
-1. Navigate to the application directory:
-```bash
-cd src/app-school-info
-```
-
-2. Install the required dependencies:
-```bash
-uv pip install -r requirements.txt
-```
-
-3. Start the Gradio server:
-```bash
-uv run python app.py
-```
-
-After a few seconds, the terminal will output a local URL (usually `http://127.0.0.1:7860`). Open this URL in your web browser to interact with the application.
 
 ---
 
